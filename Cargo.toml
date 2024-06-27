@@ -1,0 +1,27 @@
+[package]
+version = "0.1.0"
+name = "grpc-messaging"
+edition = "2021"
+
+# server binary
+[[bin]]
+    name = "chat-server"
+    path = "src/server.rs"
+
+# client binary
+[[bin]]
+    name = "client"
+    path = "src/client.rs"
+
+[dependencies]
+
+tonic = "0.11"
+prost = "0.12"
+tokio = { version = "1.0", features = ["full", "macros", "rt-multi-thread"] }
+aws-sdk-dynamodb = "1.3.0"
+aws-config = "1.5.3"
+lazy_static = "1.0"
+
+[build-dependencies]
+tonic-build = "0.11"
+

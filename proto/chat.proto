@@ -1,0 +1,36 @@
+syntax="proto3";
+package chat;
+
+service Chat { 
+    //rpc RequestRoom (EnterRequest) returns (Empty);
+    rpc UserRooms (User) returns (UserRoomResponse);
+    //rpc SendMessageStream(stream ChatMessage) returns (stream ChatMessage);
+}
+
+message Empty{}
+
+message User{ 
+    string userId = 1;
+}
+
+message Room { 
+    uint64 roomId = 1;
+    string roomName = 2;
+}
+
+message UserRoomResponse { 
+    repeated Room rooms = 1;
+}
+
+message EnterRequest { 
+    string userId = 1;
+    string roomId = 2;
+    string username = 3; 
+    string message = 4;
+}
+
+message ChatMessage { 
+    string userId = 1;
+    string username = 2;
+    string message = 3;
+}
