@@ -4,7 +4,7 @@ use aws_config::meta::region::RegionProviderChain;
 use aws_config::BehaviorVersion;
 
 use chat::chat_server::{Chat, ChatServer};
-use chat::{User, UserRoomResponse, Room, ChatMessage, Empty, RoomRequest, FriendRequest};
+use chat::{User, UserRoomResponse, Room, ChatMessage, Empty, RoomRequest, FriendRequest, FriendResponse};
 
 use std::{collections::HashMap, sync::{Arc, Mutex}};
 use std::convert::From;
@@ -65,9 +65,17 @@ impl Chat for ChatService {
         Ok(Response::new(Empty{}))
     }
 
-    async fn request_friend(
+    //can only send a request if you haven't sent already 
+    async fn send_request_friend(
         &self, 
         request: Request<FriendRequest>,
+    ) -> Result<Response<Empty>, Status> {
+        Ok(Response::new(Empty{}))
+    }
+
+    async fn respond_friend_request (
+        &self, 
+        request: Request<FriendResponse>,
     ) -> Result<Response<Empty>, Status> {
         Ok(Response::new(Empty{}))
     }
@@ -100,34 +108,34 @@ impl Chat for ChatService {
         }
     }
 
-    //TODO: Might not be needed
-    async fn send_message(
-        &self, 
-        request: Request<ChatMessage>,
-    ) -> Result<Response<Empty>, Status> {
-        let chat_message = request.into_inner();
-        let room_id = chat_message.room_id.clone();
-        let message_table_env = &env::var("MESSAGE_TABLE").unwrap();
+    // //TODO: Might not be needed
+    // async fn send_message(
+    //     &self, 
+    //     request: Request<ChatMessage>,
+    // ) -> Result<Response<Empty>, Status> {
+    //     let chat_message = request.into_inner();
+    //     let room_id = chat_message.room_id.clone();
+    //     let message_table_env = &env::var("MESSAGE_TABLE").unwrap();
         
-        let results = put_dynamodb(&self.dynamodb_client, message_table_env, 
-            vec![
-            (String::from("userId"), chat_message.user_id.clone()),
-            (String::from("roomId"), chat_message.room_id.clone()),
-            (String::from("username"), chat_message.username.clone()),
-            (String::from("message"), chat_message.message.clone()),
-            ]
-        ).await;
+    //     let results = put_dynamodb(&self.dynamodb_client, message_table_env, 
+    //         vec![
+    //         (String::from("userId"), chat_message.user_id.clone()),
+    //         (String::from("roomId"), chat_message.room_id.clone()),
+    //         (String::from("username"), chat_message.username.clone()),
+    //         (String::from("message"), chat_message.message.clone()),
+    //         ]
+    //     ).await;
 
-        match results {
-            Ok(_) => {
-                let room_map = self.rooms.lock().unwrap();  
-                let room_channel = room_map.get(&room_id).unwrap(); 
-                room_channel.producer.send(chat_message);
-                Ok(Response::new(Empty{}))
-            },
-            Err(e) => Err(Status::new(Code::Aborted, e.to_string())),
-        }
-    }
+    //     match results {
+    //         Ok(_) => {
+    //             let room_map = self.rooms.lock().unwrap();  
+    //             let room_channel = room_map.get(&room_id).unwrap(); 
+    //             room_channel.producer.send(chat_message);
+    //             Ok(Response::new(Empty{}))
+    //         },
+    //         Err(e) => Err(Status::new(Code::Aborted, e.to_string())),
+    //     }
+    // }
 
 }
 
@@ -209,25 +217,37 @@ pub async fn put_dynamodb(
     Ok(())
 }
 
-async fn on_connect(socket: SocketRef) {
-    info!("socket connected: {}", socket.id);
+async fn on_connect(s: SocketRef) {
+    info!("socket connected: {}", s.id);
 
-    socket.on(
-        "/",
-        |socket: SocketRef, Data::<String>(room)| async move {
-            info!("Received join: {:?}", room);
-            let _ = socket.leave_all();
-            let _ = socket.join(room.clone());
-            let _ = socket.emit("messages", "hi");
-        },
+    s.on("join", |s: SocketRef, Data::<String>(room)| {
+        info!("joined room {}", room);
+        s.join(room)
+        .ok();
+    });
+
+    s.on(
+        "new message", 
+        |s: SocketRef, Data::<String>(msg)| {
+            println!("rooms connected: {:?}",s.rooms());
+            s.broadcast().emit("new message", "hi")
+            .ok();
+        }
     );
 
-    socket.on(
-        "test",
-        |socket: SocketRef| async move {
-            info!("Received join!");
-        }, 
-    )
+    s.on(
+        "typing", |s: SocketRef| {
+            s.broadcast()
+                .emit("typing", "typing")
+                .ok();
+        }
+    );
+
+    s.on_disconnect(|s: SocketRef| {
+        s.broadcast().emit("user left", "gone")
+        .ok();
+    })
+
 }
 
 #[tokio::main]
@@ -239,7 +259,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (layer, io) = SocketIo::new_layer();
     io.ns("/", on_connect);
 
-    //find out how to make a global client
     let region_provider = RegionProviderChain::default_provider().or_else("us-east-1");
     let config = aws_config::defaults(BehaviorVersion::latest())
         .region(region_provider)

@@ -3,9 +3,15 @@ package chat;
 
 service Chat { 
     rpc RequestRoom (RoomRequest) returns (Empty);
-    rpc RequestFriend (FriendRequest) returns (Empty);
+    rpc SendRequestFriend (FriendRequest) returns (Empty);
+    rpc RespondFriendRequest (FriendResponse) returns (Empty);
     rpc UserRooms (User) returns (UserRoomResponse);
-    rpc SendMessage(ChatMessage) returns (Empty);
+}
+
+message FriendResponse {
+    string senderUserId = 1;
+    string receiverUserId = 2;
+    bool acceptFQ = 3;
 }
 
 message Empty{}
