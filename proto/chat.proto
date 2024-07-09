@@ -2,12 +2,26 @@ syntax="proto3";
 package chat;
 
 service Chat { 
-    //rpc RequestRoom (EnterRequest) returns (Empty);
+    rpc RequestRoom (RoomRequest) returns (Empty);
+    rpc RequestFriend (FriendRequest) returns (Empty);
     rpc UserRooms (User) returns (UserRoomResponse);
-    //rpc SendMessageStream(stream ChatMessage) returns (stream ChatMessage);
+    rpc SendMessage(ChatMessage) returns (Empty);
 }
 
 message Empty{}
+
+message EnterRoom {
+    string userId = 1;
+    string roomId = 2;
+    string username = 3;  
+}
+
+message FriendRequest {
+    string senderUserId = 1;
+    string receiverUserId = 2;
+    string senderUsername = 3; 
+    string message = 4; 
+}
 
 message User{ 
     string userId = 1;
@@ -22,7 +36,7 @@ message UserRoomResponse {
     repeated Room rooms = 1;
 }
 
-message EnterRequest { 
+message RoomRequest { 
     string userId = 1;
     string roomId = 2;
     string username = 3; 
@@ -31,6 +45,8 @@ message EnterRequest {
 
 message ChatMessage { 
     string userId = 1;
-    string username = 2;
-    string message = 3;
+    string roomId = 2;
+    string username = 3;
+    string message = 4;
+    optional string url = 5;
 }
