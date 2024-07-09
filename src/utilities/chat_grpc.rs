@@ -12,7 +12,7 @@ use tonic::{
     Code
 };
 
-use crate::utilities::dynamo_operations::query_dynamodb;
+use crate::utilities::dynamo_operations::{query_dynamodb, build_dynamo_client};
 use chat::{
     chat_server::Chat, 
     User, 
@@ -39,6 +39,11 @@ impl ChatService {
             dynamodb_client, 
         }
     }
+}
+
+pub async fn create_service() -> ChatService {
+    let dynamodb_client = build_dynamo_client().await;
+    ChatService::new(dynamodb_client)
 }
 
 #[tonic::async_trait]

@@ -4,6 +4,8 @@ use super::{
     HashMap,
     KeysAndAttributes
 };
+use aws_config::meta::region::RegionProviderChain;
+use aws_config::BehaviorVersion;
 
 pub async fn put_dynamodb( 
     client: &DynamoClient,
@@ -46,4 +48,13 @@ pub async fn query_dynamodb( //with the result make sure to get table_name and t
     let result = client.batch_get_item().request_items(table_name, dynamo_query).send().await?;
 
     Ok(result.responses.unwrap())
+}
+
+pub async fn build_dynamo_client() -> DynamoClient {
+    let region_provider = RegionProviderChain::default_provider().or_else("us-east-1");
+    let config = aws_config::defaults(BehaviorVersion::latest())
+        .region(region_provider)
+        .load()
+        .await;
+    DynamoClient::new(&config)
 }
