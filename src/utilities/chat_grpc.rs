@@ -1,12 +1,29 @@
-use aws_sdk_dynamodb::types::AttributeValue;
-use aws_sdk_dynamodb::Client as DynamoClient;
-use chat::chat_server::Chat;
-use chat::{User, UserRoomResponse, Room, ChatMessage, Empty, RoomRequest, FriendRequest, FriendResponse};
-use tonic::{Request, Response, Status, Code};
-use crate::utilities::dynamo_operations::query_dynamodb;
-use std::env;
+use super:: {
+    DynamoClient,
+    AttributeValue,
+    HashMap,
+    env
+};
 
-use std::collections::HashMap;
+use tonic::{
+    Request, 
+    Response, 
+    Status, 
+    Code
+};
+
+use crate::utilities::dynamo_operations::query_dynamodb;
+use chat::{
+    chat_server::Chat, 
+    User, 
+    UserRoomResponse, 
+    Room, 
+    ChatMessage, 
+    Empty, 
+    RoomRequest, 
+    FriendRequest, 
+    FriendResponse
+};
 
 pub mod chat { 
     tonic::include_proto!("chat");

@@ -1,6 +1,9 @@
-use aws_sdk_dynamodb::types::{AttributeValue, KeysAndAttributes};
-use aws_sdk_dynamodb::Client as DynamoClient;
-use std::collections::HashMap;
+use super::{
+    DynamoClient,
+    AttributeValue,
+    HashMap,
+    KeysAndAttributes
+};
 
 pub async fn put_dynamodb( 
     client: &DynamoClient,
