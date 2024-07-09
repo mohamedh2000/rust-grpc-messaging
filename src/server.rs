@@ -1,3 +1,11 @@
+mod utilities;
+use utilities::{
+    chat_grpc::{
+        chat::chat_server::ChatServer, ChatService
+    }, 
+    socket_handler::on_connect
+};
+
 use aws_sdk_dynamodb::Client as DynamoClient;
 use aws_config::meta::region::RegionProviderChain;
 use aws_config::BehaviorVersion;
@@ -10,14 +18,6 @@ use tracing::info;
 use tracing_subscriber::FmtSubscriber;
 
 use socketioxide::SocketIo;
-
-use grpc_messaging::{
-    socket::on_connect,
-    chat_grpc::{
-        ChatService,
-        chat::chat_server::ChatServer
-    }
-};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
