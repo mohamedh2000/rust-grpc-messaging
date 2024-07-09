@@ -21,11 +21,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
     tracing::subscriber::set_global_default(FmtSubscriber::default())?;
 
+    let chat_service = create_service().await; 
+
     let addr = "[::1]:50051";
     let (layer, io) = SocketIo::new_layer();
+
     io.ns("/", on_connect);
 
-    let chat_service = create_service().await; 
+
+
 
     println!("ChatServer listening on {}", addr);
 

@@ -8,7 +8,7 @@ use aws_config::meta::region::RegionProviderChain;
 use aws_config::BehaviorVersion;
 
 pub async fn put_dynamodb( 
-    client: &DynamoClient,
+    client: DynamoClient,
     table_name: &str,
     query_params: Vec<(String, String)>
 ) -> Result<(), aws_sdk_dynamodb::Error> {

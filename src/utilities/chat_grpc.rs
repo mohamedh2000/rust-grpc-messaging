@@ -30,7 +30,7 @@ pub mod chat {
 }
 
 pub struct ChatService {
-    dynamodb_client: DynamoClient,
+    pub dynamodb_client: DynamoClient,
 }
 
 impl ChatService {
@@ -141,7 +141,7 @@ impl DynamoDbQuery<UserRoomResponse> for UserRoomResponse {}
 trait DynamoDbQuery<T> where T: DynamoResultConversions<T, Vec<HashMap<String, AttributeValue>>> {
     //makes a batch get request to dynamodb and then converts data to the passed in type T
     async fn get_batch_results( map: Vec<(String, String)>, table_name:&str, client: &DynamoClient) -> Result<T, aws_sdk_dynamodb::Error> {
-        let result = query_dynamodb(&client, table_name, map ).await?;
+        let result = query_dynamodb(client, table_name, map ).await?;
         let rooms_metadata = result.get(table_name).unwrap();
         Ok(T::convert_to_message(rooms_metadata))
     }

@@ -1,7 +1,10 @@
+use crate::utilities::dynamo_operations::{put_dynamodb, build_dynamo_client};
+use crate::utilities::chat_grpc::chat::ChatMessage;
 use super::{
     info, 
     Data, 
-    SocketRef
+    SocketRef,
+    env
 };
 
 pub async fn on_connect(s: SocketRef) {
@@ -14,12 +17,7 @@ pub async fn on_connect(s: SocketRef) {
     });
 
     s.on(
-        "new message", 
-        |s: SocketRef, Data::<String>(msg)| {
-            println!("rooms connected: {:?}",s.rooms());
-            s.broadcast().emit("new message", "hi")
-            .ok();
-        }
+        "new message", message_handler
     );
 
     s.on(
@@ -35,4 +33,28 @@ pub async fn on_connect(s: SocketRef) {
         .ok();
     })
 
+}
+
+pub async fn message_handler(s: SocketRef, room: Data::<String>) {
+    println!("rooms connected: {:?}",s.rooms());
+    let message_table_env = &env::var("MESSAGE_TABLE").unwrap();
+
+    s.within(room.to_string()).emit("new message", "hi").ok();
+    let client = build_dynamo_client().await; //TODO COME BACK TO THIS, SHOULDN'T BE REINITIALIZED THIS MUCH
+
+    let table_entry = put_dynamodb(
+        client, 
+        message_table_env, 
+        vec![
+            (String::from("userId"), String::from("test")/*msg.user_id.clone()*/),
+            (String::from("roomId"), String::from("test") /*msg.room_id.clone()*/),
+            (String::from("username"), String::from("test") /*msg.username.clone()*/),
+            (String::from("message"), String::from("test") /*msg.message.clone()*/),
+        ]
+    ).await;
+
+    match table_entry {
+        Ok(_) => info!("new message entry was entered"),
+        Err(e) => info!("new error message: {}", e.to_string())
+    }
 }

@@ -1,7 +1,7 @@
 use chat::chat_client::ChatClient;
 use chat::User;
 use socketioxide::{
-    extract::SocketRef, layer::SocketIoLayer, SocketIo
+    extract::SocketRef, SocketIo
 };
 pub mod chat {
     tonic::include_proto!("chat");
