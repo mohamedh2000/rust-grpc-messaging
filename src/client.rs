@@ -22,7 +22,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         user_id: String::from("test"),
     });
     
-    let response = client.user_rooms(request).await?;
+    let response = client.user_info(request).await?;
 
     println!("RESPONSE={:?}", response);
 

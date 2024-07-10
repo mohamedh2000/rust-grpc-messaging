@@ -5,7 +5,8 @@ service Chat {
     rpc RequestRoom (RoomRequest) returns (Empty);
     rpc SendRequestFriend (FriendRequest) returns (Empty);
     rpc RespondFriendRequest (FriendResponse) returns (Empty);
-    rpc UserRooms (User) returns (UserRoomResponse);
+    rpc UserInfo (User) returns (UserInfoResponse);
+    rpc SetUserPfp (UserPfpRequest) returns (Empty);
 }
 
 message FriendResponse {
@@ -15,6 +16,11 @@ message FriendResponse {
 }
 
 message Empty{}
+
+message UserPfpRequest {
+    string userId = 1;
+    string pfpPic = 2;
+}
 
 message EnterRoom {
     string userId = 1;
@@ -29,17 +35,31 @@ message FriendRequest {
     string message = 4; 
 }
 
-message User{ 
+message User { 
     string userId = 1;
+}
+
+message Friend {
+    string userId = 1;
+    string userName = 2;
+    string userPfp = 3;
 }
 
 message Room { 
     uint64 roomId = 1;
     string roomName = 2;
+    string roomPfp = 3;
 }
 
-message UserRoomResponse { 
-    repeated Room rooms = 1;
+message UserInfoResponse {
+    string userName = 1;
+    string userPfp = 2;
+    UserListResponse userData = 3;
+}
+
+message UserListResponse {
+    repeated Friend friends = 1;
+    repeated Room rooms = 2;
 }
 
 message RoomRequest { 

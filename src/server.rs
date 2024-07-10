@@ -28,9 +28,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     io.ns("/", on_connect);
 
-
-
-
     println!("ChatServer listening on {}", addr);
 
     let app = Router::new()

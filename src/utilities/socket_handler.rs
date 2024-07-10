@@ -38,7 +38,7 @@ pub async fn on_connect(s: SocketRef) {
 pub async fn message_handler(s: SocketRef, room: Data::<String>) {
     println!("rooms connected: {:?}",s.rooms());
     let message_table_env = &env::var("MESSAGE_TABLE").unwrap();
-
+    
     s.within(room.to_string()).emit("new message", "hi").ok();
     let client = build_dynamo_client().await; //TODO COME BACK TO THIS, SHOULDN'T BE REINITIALIZED THIS MUCH
 

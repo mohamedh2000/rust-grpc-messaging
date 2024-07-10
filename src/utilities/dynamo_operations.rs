@@ -32,15 +32,15 @@ pub async fn put_dynamodb(
 pub async fn query_dynamodb( //with the result make sure to get table_name and then you can iterate over the values
     client: &DynamoClient,
     table_name: &str,
-    query_params: Vec<(String, String)>
+    query_params: &Vec<(String, String)>
 ) -> Result<HashMap<String, Vec<HashMap<String, AttributeValue>>>, aws_sdk_dynamodb::Error> {
 
     let mut vector_attributes: Vec<HashMap<String, AttributeValue>> = vec![];
     for params in query_params {
         vector_attributes.push(
             HashMap::from([(
-                params.0, 
-                AttributeValue::S(params.1),
+                params.0.clone(), 
+                AttributeValue::S(params.1.clone()),
             )])
         )
     }; 
