@@ -10,7 +10,7 @@ use tonic::{
     Status, 
     Code
 };
-use crate::utilities::dynamo_operations::{query_dynamodb, build_dynamo_client};
+use crate::utilities::dynamo_operations::{prepare_dynamo_params, query_dynamodb, build_dynamo_client};
 use chat::{
     chat_server::Chat, 
     User, 
@@ -45,6 +45,9 @@ pub async fn create_service() -> ChatService {
     let dynamodb_client = build_dynamo_client().await;
     ChatService::new(dynamodb_client)
 }
+
+
+
 
 #[tonic::async_trait]
 impl Chat for ChatService {
@@ -92,6 +95,7 @@ impl Chat for ChatService {
             &self.dynamodb_client, 
             user_table_env, 
             &vec![(String::from("userId"), user_id)]).await.unwrap();
+
         let results = results.get(user_table_env).unwrap();
 
         let user_info = &results[0];
@@ -99,20 +103,10 @@ impl Chat for ChatService {
         //get username and profile pic
         let user_name = String::from(AttributeValue::as_s(user_info.get("userName").unwrap()).unwrap());
         let user_pfp = String::from(AttributeValue::as_s(user_info.get("profilePic").unwrap()).unwrap());
-        
-        //get list of rooms 
-        let user_rooms = user_info.get("rooms").unwrap();
-        let rooms_vec = AttributeValue::as_l(user_rooms).unwrap();
-        let rooms_vec = rooms_vec.iter().map(|room| {
-            (String::from("roomId"), String::from(AttributeValue::as_n(room).unwrap()))
-        }).collect::<Vec<_>>();
 
-        //get list of friends
-        let user_friends = user_info.get("friends").unwrap();
-        let friends_vec = AttributeValue::as_l(user_friends).unwrap();
-        let friends_vec = friends_vec.iter().map(|friend| {
-            (String::from("userId"), String::from(AttributeValue::as_s(friend).unwrap()))
-        }).collect::<Vec<_>>();
+        //get list of rooms and friends
+        let rooms_vec = prepare_dynamo_params(&user_info, "rooms", "roomId");
+        let friends_vec = prepare_dynamo_params(&user_info, "friends", "userId"); 
 
         let mut query_param_map = HashMap::new();
 
@@ -121,12 +115,11 @@ impl Chat for ChatService {
 
         match UserListResponse::get_batch_results(query_param_map, &self.dynamodb_client).await { 
             Ok(user_data) => {
-                let data = Some(user_data);
                 Ok(Response::new( 
                         UserInfoResponse {
                             user_name,
                             user_pfp,
-                            user_data: data
+                            user_data: Some(user_data)
                         }
                     )
                 )
@@ -143,20 +136,26 @@ trait DynamoResultConversions<T, U> {
 
 impl DynamoDbQuery<UserListResponse> for UserListResponse {}
 
-trait DynamoDbQuery<T> where T: DynamoResultConversions<T, HashMap<String, Vec<HashMap<String, AttributeValue>>>> {
+trait DynamoDbQuery<T> where 
+    T: DynamoResultConversions<T, HashMap<String, Vec<HashMap<String, AttributeValue>>>> {
     //makes a batch get request to dynamodb and then converts data to the passed in type T
     //map keys need to match .env table parameters
-    async fn get_batch_results( map: HashMap<String, Vec<(String, String)>>, client: &DynamoClient) 
-        -> Result<T, aws_sdk_dynamodb::Error> {
+    async fn get_batch_results(
+        map: HashMap<String, Vec<(String, String)>>, 
+        client: &DynamoClient
+    ) -> Result<T, aws_sdk_dynamodb::Error> {
 
         let mut ret_map = HashMap::new();
 
         for key in map.keys() {
-            let table_name = &env::var(format!("{}_TABLE", key.to_uppercase())).unwrap();
+            let table_name = env::var(format!("{}_TABLE", key.to_uppercase())).unwrap();
             let query_params = map.get(key).unwrap(); 
-            let result = query_dynamodb(client, table_name, query_params).await?;
-            let data = result.get(table_name).unwrap();
-            ret_map.insert(key.clone(), data.clone()); //TODO: COME BACK TO THIS CLONE
+            let mut result = query_dynamodb(client, &table_name, query_params).await?;
+            /*
+                removing returns the value of the key in the hashmap
+                using this so that I don't have to clone 
+            */
+            ret_map.insert(String::from(key), result.remove(&table_name).unwrap()); 
         }
 
         Ok(T::convert_to_message(&ret_map))

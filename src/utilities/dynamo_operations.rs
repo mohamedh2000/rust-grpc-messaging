@@ -7,6 +7,14 @@ use super::{
 use aws_config::meta::region::RegionProviderChain;
 use aws_config::BehaviorVersion;
 
+pub fn prepare_dynamo_params(map: &HashMap<String, AttributeValue>, param_name: &str, primary_key: &str) -> Vec<(String, String)> {
+    let param_attr = map.get(param_name).unwrap();
+    let param_vec = AttributeValue::as_l(param_attr).unwrap();
+    param_vec.iter().map(|attr| {
+        (String::from(primary_key), String::from(AttributeValue::as_s(attr).unwrap()))
+    }).collect::<Vec<_>>()
+}
+
 pub async fn put_dynamodb( 
     client: DynamoClient,
     table_name: &str,
