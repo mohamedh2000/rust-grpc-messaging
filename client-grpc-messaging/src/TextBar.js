@@ -10,7 +10,6 @@ const TextBar = () => {
 
     //send message  
     const handleMessage = (e) => {
-        console.log(io)
         io.emit("join", "10031")
         io.emit("new message", )
         io.emit("test", "hey!");

@@ -1,0 +1,9 @@
+/Users/husseinmohamed/Desktop/Learn_Rust/projects/grpc-messaging/target/debug/deps/libaws_smithy_xml-728b8a459dba224f.rmeta: /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/lib.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/decode.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/encode.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/escape.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/unescape.rs
+
+/Users/husseinmohamed/Desktop/Learn_Rust/projects/grpc-messaging/target/debug/deps/aws_smithy_xml-728b8a459dba224f.d: /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/lib.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/decode.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/encode.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/escape.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/unescape.rs
+
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/lib.rs:
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/decode.rs:
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/encode.rs:
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/escape.rs:
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/aws-smithy-xml-0.60.8/src/unescape.rs:

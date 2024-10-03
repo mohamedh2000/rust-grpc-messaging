@@ -1,0 +1,9 @@
+/Users/husseinmohamed/Desktop/Learn_Rust/projects/grpc-messaging/target/debug/deps/libxmlparser-10dd95b14cf17809.rmeta: /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/lib.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/error.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/stream.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/strspan.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/xmlchar.rs
+
+/Users/husseinmohamed/Desktop/Learn_Rust/projects/grpc-messaging/target/debug/deps/xmlparser-10dd95b14cf17809.d: /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/lib.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/error.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/stream.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/strspan.rs /Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/xmlchar.rs
+
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/lib.rs:
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/error.rs:
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/stream.rs:
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/strspan.rs:
+/Users/husseinmohamed/.cargo/registry/src/index.crates.io-6f17d22bba15001f/xmlparser-0.13.6/src/xmlchar.rs:
