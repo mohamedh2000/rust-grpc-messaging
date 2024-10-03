@@ -1,0 +1,78 @@
+syntax="proto3";
+package chat;
+
+service Chat { 
+    rpc RequestRoom (RoomRequest) returns (Empty);
+    rpc SendFriendRequest (FriendRequest) returns (Empty);
+    rpc RespondFriendRequest (FriendResponse) returns (Empty);
+    rpc UserInfo (User) returns (UserInfoResponse);
+    rpc SetUserPfp (UserPfpRequest) returns (Empty);
+}
+
+message FriendResponse {
+    string senderUserId = 1;
+    string receiverUserId = 2;
+    bool acceptFQ = 3;
+}
+
+message Empty{}
+
+message UserPfpRequest {
+    string userId = 1;
+    string pfpPic = 2;
+}
+
+message EnterRoom {
+    string userId = 1;
+    string roomId = 2;
+    string username = 3;  
+}
+
+message FriendRequest {
+    string senderUserId = 1;
+    string receiverUserId = 2;
+    string message = 3; 
+    string date = 4;
+}
+
+message User { 
+    string userId = 1;
+}
+
+message Friend {
+    string userId = 1;
+    string userName = 2;
+    string userPfp = 3;
+}
+
+message Room { 
+    uint64 roomId = 1;
+    string roomName = 2;
+    string roomPfp = 3;
+}
+
+message UserInfoResponse {
+    string userName = 1;
+    string userPfp = 2;
+    UserListResponse userData = 3;
+}
+
+message UserListResponse {
+    repeated Friend friends = 1;
+    repeated Room rooms = 2;
+}
+
+message RoomRequest { 
+    string userId = 1;
+    string roomId = 2;
+    string username = 3; 
+    string message = 4;
+}
+
+message ChatMessage { 
+    string userId = 1;
+    string roomId = 2;
+    string username = 3;
+    string message = 4;
+    optional string url = 5;
+}

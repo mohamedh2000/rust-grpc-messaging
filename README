@@ -1,0 +1,17 @@
+//compile chat.proto to js 
+protoc -I=. chat.proto --js_out=import_style=commonjs,binary:. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.
+
+/* 
+    run envoy docker container for grpc-web (client)
+    container will run on port 8080 
+*/
+docker build -t grpc-web-react .
+docker run -d --name grpc-web-react -p 8080:8080 -p 9901:9901 grpc-web-react
+
+//to start server
+cargo run --bin chat-server
+
+//to start react
+npm start
+
+
