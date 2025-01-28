@@ -2,7 +2,8 @@ use super::{
     DynamoClient,
     AttributeValue,
     HashMap,
-    KeysAndAttributes
+    KeysAndAttributes,
+    info
 };
 use aws_config::meta::region::RegionProviderChain;
 use aws_config::BehaviorVersion;
@@ -34,7 +35,7 @@ pub async fn put_dynamodb(
     }).collect::<Vec<_>>();
 
     let items_map: HashMap<String, AttributeValue> = HashMap::from_iter(new_params);
-
+    info!("{:?}", items_map.clone());
     client.put_item()
         .table_name(table_name)
         .set_item(Some(items_map)).send().await?;

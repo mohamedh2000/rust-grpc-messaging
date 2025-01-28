@@ -22,7 +22,10 @@ use chat::{
     Empty, 
     RoomRequest, 
     FriendRequest, 
-    FriendResponse
+    FriendResponse,
+    Message, 
+    RoomId, 
+    Messages
 };
 
 pub mod chat { 
@@ -55,6 +58,39 @@ impl Chat for ChatService {
         request: Request<RoomRequest>,
     ) -> Result<Response<Empty>, Status> {
         Ok(Response::new(Empty{}))
+    }
+
+    //TODO
+    async fn get_messages(
+        &self,
+        request: Request<RoomId>,
+    ) -> Result<Response<Messages>, Status> {
+
+        let room_id = request.into_inner().room_id;
+
+        let message_table_env = &env::var("MESSAGE_TABLE").unwrap();
+
+        let results = query_dynamodb(
+            &self.dynamodb_client, 
+            message_table_env, 
+            &vec![(String::from("roomId"), room_id)]).await.unwrap();
+
+        let messages = results.get(message_table_env).unwrap()[0].clone();
+        println!("{:?}", messages);
+
+        let results = results.get(message_table_env).unwrap();
+
+        let mut msg_arr = vec![];
+
+        for msg in results.iter() {
+            msg_arr.push(Message::convert_to_message(msg));
+        }
+
+        Ok(Response::new(
+            Messages {
+                messages: msg_arr
+            }
+        ))
     }
 
     //can only send a request if you haven't sent already 
@@ -191,6 +227,18 @@ impl DynamoResultConversions<UserListResponse, HashMap<String, Vec<HashMap<Strin
         UserListResponse {
             friends: friends_metadata,
             rooms: rooms_metadata
+        }
+    }
+}
+
+impl DynamoResultConversions<Message, HashMap<String, AttributeValue>> for Message {
+    fn convert_to_message(to_convert: &HashMap<String, AttributeValue>) -> Self {
+        Message {
+            message_id: String::from(AttributeValue::as_s(to_convert.get("message_id").unwrap()).unwrap()),
+            date: String::from(AttributeValue::as_s(to_convert.get("date").unwrap()).unwrap()),
+            message: String::from(AttributeValue::as_s(to_convert.get("message").unwrap()).unwrap()),
+            room_id: String::from(AttributeValue::as_s(to_convert.get("room_id").unwrap()).unwrap()),
+            user_id: String::from(AttributeValue::as_s(to_convert.get("userId").unwrap()).unwrap()), 
         }
     }
 }

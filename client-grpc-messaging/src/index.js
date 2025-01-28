@@ -1,20 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { IoContext, socket } from './Contexts/IoContext';
-import { client } from './Contexts/GrpcContext';
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { IoContext, socket } from "./Contexts/IoContext";
+import { UserDataProvider } from "./Contexts/UserDataContext";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
-
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
-    
     <IoContext.Provider value={socket}>
-      <App />
+      <UserDataProvider>
+        <App />
+      </UserDataProvider>
     </IoContext.Provider>
   </React.StrictMode>
 );

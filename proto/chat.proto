@@ -7,6 +7,7 @@ service Chat {
     rpc RespondFriendRequest (FriendResponse) returns (Empty);
     rpc UserInfo (User) returns (UserInfoResponse);
     rpc SetUserPfp (UserPfpRequest) returns (Empty);
+    rpc GetMessages (RoomId) returns (Messages);
 }
 
 message FriendResponse {
@@ -16,6 +17,10 @@ message FriendResponse {
 }
 
 message Empty{}
+
+message RoomId {
+    string roomId = 1;
+}
 
 message UserPfpRequest {
     string userId = 1;
@@ -75,4 +80,16 @@ message ChatMessage {
     string username = 3;
     string message = 4;
     optional string url = 5;
+}
+
+message Messages { 
+    repeated Message messages = 1;
+}
+
+message Message {
+    string messageId = 1;
+    string date = 2; 
+    string message = 3; 
+    string roomId = 4; 
+    string userId = 5;  
 }

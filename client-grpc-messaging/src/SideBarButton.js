@@ -1,12 +1,35 @@
+import { IoContext } from './Contexts/IoContext';
+import { useContext, useEffect } from "react";
+import { UserDataContext } from './Contexts/UserDataContext';
+import {client} from './Contexts/GrpcContext'
+import { RoomId } from "./proto_js/chat_pb";
+const SideBarButton = ({roomId, text, pfp}) => {
 
+  const io = useContext(IoContext);
+  const {currentRoom, setCurrentRoom, setCurrentMessages} = useContext(UserDataContext);
 
-const SideBarButton = ({text, func}) => {
+  const GetChats = (roomId) => {
+    console.log(roomId, currentRoom)
+    if(roomId !== currentRoom) {
+      console.log("im in if statement);")
+      io.emit("join", `${roomId}`);
+      const roomId = new RoomId();
+      roomId.setRoomId(roomId);
+
+      //get all messages for room
+      client.getMessages(roomId, null, (err, response) => {
+        console.log(response.toObject());
+      })
+      
+    }
+
+  }
 
     return (
         <div
           role="button"
           className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-gray-200 active:bg-gray-400 "
-          onClick={func}
+          onClick={() => GetChats(roomId)}
         >
           <div class="grid mr-4 place-items-center">
             <svg
