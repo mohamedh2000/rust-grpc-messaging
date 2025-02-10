@@ -14,7 +14,7 @@ pub struct FriendResponse {
 pub struct Empty {}
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RoomId {
+pub struct Roomid {
     #[prost(string, tag = "1")]
     pub room_id: ::prost::alloc::string::String,
 }
@@ -329,7 +329,7 @@ pub mod chat_client {
         }
         pub async fn get_messages(
             &mut self,
-            request: impl tonic::IntoRequest<super::RoomId>,
+            request: impl tonic::IntoRequest<super::Roomid>,
         ) -> std::result::Result<tonic::Response<super::Messages>, tonic::Status> {
             self.inner
                 .ready()
@@ -380,7 +380,7 @@ pub mod chat_server {
         ) -> std::result::Result<tonic::Response<super::Empty>, tonic::Status>;
         async fn get_messages(
             &self,
-            request: tonic::Request<super::RoomId>,
+            request: tonic::Request<super::Roomid>,
         ) -> std::result::Result<tonic::Response<super::Messages>, tonic::Status>;
     }
     #[derive(Debug)]
@@ -677,7 +677,7 @@ pub mod chat_server {
                 "/chat.Chat/GetMessages" => {
                     #[allow(non_camel_case_types)]
                     struct GetMessagesSvc<T: Chat>(pub Arc<T>);
-                    impl<T: Chat> tonic::server::UnaryService<super::RoomId>
+                    impl<T: Chat> tonic::server::UnaryService<super::Roomid>
                     for GetMessagesSvc<T> {
                         type Response = super::Messages;
                         type Future = BoxFuture<
@@ -686,7 +686,7 @@ pub mod chat_server {
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::RoomId>,
+                            request: tonic::Request<super::Roomid>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {

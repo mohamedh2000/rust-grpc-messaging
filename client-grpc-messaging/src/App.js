@@ -29,10 +29,6 @@ function App() {
 
   }, []);
 
-  useEffect(() => {
-
-  }, [currentRoom]);
-
 
   return (
     <div className="App h-screen w-screen flex">

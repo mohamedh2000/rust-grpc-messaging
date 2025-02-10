@@ -382,16 +382,16 @@ proto.chat.ChatPromiseClient.prototype.setUserPfp =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.chat.RoomId,
+ *   !proto.chat.Roomid,
  *   !proto.chat.Messages>}
  */
 const methodDescriptor_Chat_GetMessages = new grpc.web.MethodDescriptor(
   '/chat.Chat/GetMessages',
   grpc.web.MethodType.UNARY,
-  proto.chat.RoomId,
+  proto.chat.Roomid,
   proto.chat.Messages,
   /**
-   * @param {!proto.chat.RoomId} request
+   * @param {!proto.chat.Roomid} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -402,7 +402,7 @@ const methodDescriptor_Chat_GetMessages = new grpc.web.MethodDescriptor(
 
 
 /**
- * @param {!proto.chat.RoomId} request The
+ * @param {!proto.chat.Roomid} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -423,7 +423,7 @@ proto.chat.ChatClient.prototype.getMessages =
 
 
 /**
- * @param {!proto.chat.RoomId} request The
+ * @param {!proto.chat.Roomid} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata

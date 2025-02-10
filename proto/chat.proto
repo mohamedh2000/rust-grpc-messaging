@@ -7,7 +7,7 @@ service Chat {
     rpc RespondFriendRequest (FriendResponse) returns (Empty);
     rpc UserInfo (User) returns (UserInfoResponse);
     rpc SetUserPfp (UserPfpRequest) returns (Empty);
-    rpc GetMessages (RoomId) returns (Messages);
+    rpc GetMessages (Roomid) returns (Messages);
 }
 
 message FriendResponse {
@@ -18,7 +18,7 @@ message FriendResponse {
 
 message Empty{}
 
-message RoomId {
+message Roomid {
     string roomId = 1;
 }
 

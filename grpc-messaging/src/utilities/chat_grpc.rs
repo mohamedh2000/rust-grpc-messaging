@@ -24,7 +24,7 @@ use chat::{
     FriendRequest, 
     FriendResponse,
     Message, 
-    RoomId, 
+    Roomid, 
     Messages
 };
 
@@ -63,7 +63,7 @@ impl Chat for ChatService {
     //TODO
     async fn get_messages(
         &self,
-        request: Request<RoomId>,
+        request: Request<Roomid>,
     ) -> Result<Response<Messages>, Status> {
 
         let room_id = request.into_inner().room_id;
